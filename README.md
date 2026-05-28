@@ -21,7 +21,17 @@ API REST para gerenciamento de um restaurante, com cadastro de usuarios, mesas e
 - Controle de status de mesas
 - Controle de status de reservas
 - Autenticacao com JWT
+- CORS configurado para uso do frontend local
+- Tratamento global de erros em JSON
 - Frontend web integrado em `src/main/resources/static/index.html`
+
+## Organizacao do codigo
+
+O codigo principal esta organizado no pacote base:
+
+```text
+com.luan
+```
 
 ## Regras principais
 
@@ -133,6 +143,16 @@ Para acessar rotas protegidas, envie o token no header:
 
 ```http
 Authorization: Bearer jwt_gerado_pela_api
+```
+
+## Padrao de erros
+
+Quando ocorre um erro de validacao, regra de negocio ou integridade do banco, a API retorna uma resposta JSON no formato:
+
+```json
+{
+  "erro": "Mensagem do erro"
+}
 ```
 
 ## Endpoints
@@ -258,6 +278,8 @@ Tambem pode ser aberto diretamente no navegador. Nesse caso, o HTML tenta chamar
 http://localhost:8080/
 ```
 
+A API tambem possui CORS configurado para aceitar chamadas locais, inclusive as requisicoes `OPTIONS` usadas pelo navegador antes de rotas protegidas.
+
 ## Testes
 
 Para executar os testes:
@@ -277,6 +299,8 @@ mvnw.cmd test
 - As rotas `GET` principais sao publicas.
 - Rotas de alteracao, como `PUT`, `PATCH` e `DELETE`, exigem usuario autenticado com perfil `administrador`.
 - O endpoint `POST /usuarios` esta liberado para permitir criar usuarios iniciais.
+- A API possui CORS configurado para facilitar o uso do frontend local.
+- Erros de validacao, regra de negocio e integridade retornam JSON com o campo `erro`.
 - Ao criar uma reserva, a reserva nasce como `ativo` e a mesa associada passa para `reservada`.
 - Nao e permitido criar reserva em mesa `reservada` ou `inativa`.
 - Ao cancelar uma reserva por `/reservas/{id}/cancelar`, a mesa associada passa para `disponivel`.
