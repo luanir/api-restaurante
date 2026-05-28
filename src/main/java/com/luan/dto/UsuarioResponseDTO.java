@@ -1,6 +1,6 @@
-package com.example.dto;
+package com.luan.dto;
 
-import com.example.enums.Role;
+import com.luan.enums.Role;
 
 public class UsuarioResponseDTO {
 	private Long id;

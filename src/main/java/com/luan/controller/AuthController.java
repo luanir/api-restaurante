@@ -1,10 +1,10 @@
-package com.example.controller;
+package com.luan.controller;
 
-import com.example.entity.*;
-import com.example.dto.*;
+import com.luan.entity.*;
+import com.luan.dto.*;
 //import com.example.service.*;
-import com.example.repository.*;
-import com.example.security.*;
+import com.luan.repository.*;
+import com.luan.security.*;
 
 import jakarta.validation.Valid;
 

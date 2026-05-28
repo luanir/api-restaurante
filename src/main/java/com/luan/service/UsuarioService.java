@@ -1,7 +1,7 @@
-package com.example.service;
+package com.luan.service;
 
-import static com.example.exception.Exceptions.lanca;
-import com.example.repository.UsuarioRepository;
+import static com.luan.exception.Exceptions.lanca;
+import com.luan.repository.UsuarioRepository;
 //import  com.example.exception.Exceptions;
 import java.util.List;
 import java.util.Optional;
@@ -11,8 +11,8 @@ import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
-import com.example.entity.Usuario;
-import com.example.enums.Role;
+import com.luan.entity.Usuario;
+import com.luan.enums.Role;
 
 @Service
 public class UsuarioService {

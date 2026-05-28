@@ -1,4 +1,4 @@
-package com.example.controller;
+package com.luan.controller;
 
 import java.util.List;
 import java.util.Map;
@@ -21,9 +21,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import jakarta.validation.*;
 
-import com.example.service.MesaService;
-import com.example.entity.Mesa;
-import com.example.enums.StatusMesa;
+import com.luan.service.MesaService;
+import com.luan.entity.Mesa;
+import com.luan.enums.StatusMesa;
 
 @CrossOrigin (origins = "*")
 @RestController

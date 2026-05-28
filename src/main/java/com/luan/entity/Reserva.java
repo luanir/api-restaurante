@@ -1,6 +1,6 @@
-package com.example.entity;
+package com.luan.entity;
 
-import com.example.enums.StatusReserva;
+import com.luan.enums.StatusReserva;
 import jakarta.persistence.*;
 //import com.example.entity.*;
 import java.time.LocalDateTime;

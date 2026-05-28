@@ -1,4 +1,4 @@
-package com.example.controller;
+package com.luan.controller;
 
 import java.util.List;
 //import java.util.Optional;
@@ -21,11 +21,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import jakarta.validation.*;
 
-import com.example.service.UsuarioService;
-import com.example.entity.Usuario;
-import com.example.enums.Role;
-import com.example.dto.UsuarioRequestDTO;
-import com.example.dto.UsuarioResponseDTO;
+import com.luan.service.UsuarioService;
+import com.luan.entity.Usuario;
+import com.luan.enums.Role;
+import com.luan.dto.UsuarioRequestDTO;
+import com.luan.dto.UsuarioResponseDTO;
 
 
 @CrossOrigin (origins = "*")

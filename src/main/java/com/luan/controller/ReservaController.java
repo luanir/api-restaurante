@@ -1,4 +1,4 @@
-package com.example.controller;
+package com.luan.controller;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -23,12 +23,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import jakarta.validation.*;
 
-import com.example.service.ReservaService;
-//import com.example.enums.StatusMesa;
-import com.example.enums.StatusReserva;
-import com.example.entity.*;
-import com.example.dto.ReservaRequestDTO;
-import com.example.dto.ReservaResponseDTO;
+import com.luan.service.ReservaService;
+//import com.luan.enums.StatusMesa;
+import com.luan.enums.StatusReserva;
+import com.luan.entity.*;
+import com.luan.dto.ReservaRequestDTO;
+import com.luan.dto.ReservaResponseDTO;
 
 @CrossOrigin (origins="*")
 @RestController

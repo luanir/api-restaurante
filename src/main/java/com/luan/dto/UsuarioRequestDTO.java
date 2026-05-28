@@ -1,10 +1,10 @@
-package com.example.dto;
+package com.luan.dto;
 
 //import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import com.example.enums.Role;
+import com.luan.enums.Role;
 
 
 public class UsuarioRequestDTO {

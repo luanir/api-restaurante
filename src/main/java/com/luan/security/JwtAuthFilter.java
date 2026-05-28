@@ -1,4 +1,4 @@
-package com.example.security;
+package com.luan.security;
 
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
@@ -9,8 +9,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-import com.example.security.JwtService;
-import com.example.security.UsuarioDetailsServiceImpl;
+import com.luan.security.JwtService;
+import com.luan.security.UsuarioDetailsServiceImpl;
 
 import java.io.IOException;
 

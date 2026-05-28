@@ -1,14 +1,14 @@
-package com.example.service;
+package com.luan.service;
 
-import static com.example.exception.Exceptions.lanca;
-import com.example.repository.MesaRepository;
+import static com.luan.exception.Exceptions.lanca;
+import com.luan.repository.MesaRepository;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
-import com.example.entity.Mesa;
-import com.example.enums.StatusMesa;
+import com.luan.entity.Mesa;
+import com.luan.enums.StatusMesa;
 
 @Service
 public class MesaService {

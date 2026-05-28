@@ -1,4 +1,4 @@
-package com.example.enums;
+package com.luan.enums;
 
 public enum StatusMesa {
 	disponivel,

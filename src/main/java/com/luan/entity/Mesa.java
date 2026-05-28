@@ -1,9 +1,9 @@
-package com.example.entity;
+package com.luan.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 
-import com.example.enums.StatusMesa;
+import com.luan.enums.StatusMesa;
 
 @Entity
 @Table (name= "mesas")

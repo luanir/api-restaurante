@@ -1,4 +1,4 @@
-package com.example.security;
+package com.luan.security;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;

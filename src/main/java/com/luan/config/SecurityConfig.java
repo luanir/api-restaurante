@@ -1,4 +1,4 @@
-package com.example.config;
+package com.luan.config;
 
 import java.util.List;
 
@@ -12,7 +12,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import com.example.security.*;
+import com.luan.security.*;
 @Configuration
 public class SecurityConfig {
 

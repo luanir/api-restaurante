@@ -1,4 +1,4 @@
-package com.example.dto;
+package com.luan.dto;
 
 public class LoginResponseDTO {
 

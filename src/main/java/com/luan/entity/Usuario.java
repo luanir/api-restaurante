@@ -1,11 +1,11 @@
-package com.example.entity;
+package com.luan.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 //import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import com.example.enums.Role;
+import com.luan.enums.Role;
 
 @Entity
 @Table ( name = "usuarios")

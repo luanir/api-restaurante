@@ -1,4 +1,4 @@
-package com.example.dto;
+package com.luan.dto;
 
 //import jakarta.persistence.JoinColumn;
 //import jakarta.persistence.ManyToOne;
@@ -10,7 +10,7 @@ import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDateTime;
 
-//import com.example.entity.*;
+//import com.luan.entity.*;
 
 public class ReservaRequestDTO {
 

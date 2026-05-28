@@ -1,4 +1,4 @@
-package com.example.exception;
+package com.luan.exception;
 
 import java.util.function.Supplier;
 

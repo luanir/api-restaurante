@@ -1,11 +1,11 @@
-package com.example.dto;
+package com.luan.dto;
 
-import com.example.enums.StatusReserva;
+import com.luan.enums.StatusReserva;
 
 
 import java.time.LocalDateTime;
 
-//import com.example.entity.*;
+//import com.luan.entity.*;
 
 public class ReservaResponseDTO {
 

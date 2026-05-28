@@ -1,7 +1,7 @@
-package com.example.security;
+package com.luan.security;
 
-import com.example.entity.Usuario;
-import com.example.repository.UsuarioRepository;
+import com.luan.entity.Usuario;
+import com.luan.repository.UsuarioRepository;
 import org.springframework.security.core.userdetails.*;
 import org.springframework.stereotype.Service;
 
