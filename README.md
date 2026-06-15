@@ -1,6 +1,6 @@
-# API Restaurante
+# Helpdesk
 
-API REST para gerenciamento de um restaurante, com cadastro de usuarios, mesas e reservas. O projeto tambem inclui um frontend simples em HTML, CSS e JavaScript puro, servido pelo proprio Spring Boot.
+API REST e frontend simples para gerenciamento de chamados de suporte. O projeto usa Spring Boot, Spring Security com JWT, JPA/Hibernate e PostgreSQL. O frontend fica em um unico arquivo HTML servido pelo proprio Spring Boot.
 
 ## Tecnologias
 
@@ -11,112 +11,85 @@ API REST para gerenciamento de um restaurante, com cadastro de usuarios, mesas e
 - Spring Security
 - JWT
 - PostgreSQL
-- Maven
+- Maven Wrapper
+- HTML, CSS e JavaScript embutidos em `index.html`
 
 ## Funcionalidades
 
-- Cadastro, listagem, edicao e remocao de usuarios
-- Cadastro, listagem, edicao e remocao de mesas
-- Cadastro, listagem, edicao e cancelamento de reservas
-- Controle de status de mesas
-- Controle de status de reservas
-- Autenticacao com JWT
-- CORS configurado para uso do frontend local
-- Tratamento global de erros em JSON
-- Frontend web integrado em `src/main/resources/static/index.html`
+- Cadastro e consulta de usuarios
+- Cadastro e consulta de categorias
+- Abertura, edicao, fechamento, reabertura e exclusao de chamados
+- Cadastro, edicao, consulta e exclusao de comentarios
+- Login com JWT
+- Frontend operacional em `src/main/resources/static/index.html`
 
-## Organizacao do codigo
+## Requisitos
 
-O codigo principal esta organizado no pacote base:
+- JDK 17 instalado
+- PostgreSQL rodando localmente
+- Banco de dados `helpdesk` criado
+- Maven Wrapper do projeto, via `mvnw.cmd` no Windows ou `./mvnw` no Linux/macOS
 
-```text
-com.luan
-```
+## Configuracao do Banco
 
-## Regras principais
-
-### Status de mesa
-
-Os status aceitos para mesas sao:
-
-```text
-disponivel
-reservada
-inativa
-```
-
-### Status de reserva
-
-Os status aceitos para reservas sao:
-
-```text
-ativo
-cancelado
-```
-
-### Perfis de usuario
-
-Os perfis aceitos sao:
-
-```text
-cliente
-administrador
-```
-
-## Configuracao do banco
-
-O projeto usa PostgreSQL. Configure o arquivo:
-
-```text
-src/main/resources/application.properties
-```
-
-Exemplo:
+As configuracoes atuais estao em `src/main/resources/application.properties`:
 
 ```properties
-spring.datasource.url=jdbc:postgresql://localhost:5432/restaurante
+spring.datasource.url=jdbc:postgresql://localhost:5432/helpdesk
 spring.datasource.username=postgres
-spring.datasource.password=sua_senha
+spring.datasource.password=luan
 spring.jpa.hibernate.ddl-auto=update
 ```
 
-Crie o banco no PostgreSQL antes de iniciar a aplicacao:
+Crie o banco no PostgreSQL:
 
 ```sql
-CREATE DATABASE restaurante;
+CREATE DATABASE helpdesk;
 ```
 
-## Como rodar
+Se o seu usuario, senha ou porta forem diferentes, ajuste o arquivo `application.properties`.
 
-Na raiz do projeto, execute:
+## Como Rodar
+
+No Windows:
+
+```powershell
+.\mvnw.cmd spring-boot:run
+```
+
+No Linux/macOS:
 
 ```bash
 ./mvnw spring-boot:run
 ```
 
-No Windows:
-
-```bash
-mvnw.cmd spring-boot:run
-```
-
-A API ficara disponivel em:
-
-```text
-http://localhost:8080
-```
-
-O frontend pode ser acessado em:
+Depois acesse:
 
 ```text
 http://localhost:8080/
 ```
 
+A API tambem fica disponivel em:
+
+```text
+http://localhost:8080
+```
+
+## Frontend
+
+O frontend fica em:
+
+```text
+src/main/resources/static/index.html
+```
+
+Ele nao usa CSS ou JavaScript externo. Ao rodar a aplicacao, o Spring Boot serve a tela inicial em `/`.
+
+Na lateral da tela existe o campo `Base da API`. Normalmente ele fica como `http://localhost:8080`. Se abrir o HTML fora do Spring Boot, ajuste esse campo para apontar para a API.
+
 ## Autenticacao
 
-O login retorna um token JWT.
-
-### Login
+Login:
 
 ```http
 POST /auth/login
@@ -135,174 +108,221 @@ Resposta:
 
 ```json
 {
-  "token": "jwt_gerado_pela_api"
+  "token": "jwt-gerado-pela-api"
 }
 ```
 
-Para acessar rotas protegidas, envie o token no header:
+Para endpoints protegidos, envie:
 
 ```http
-Authorization: Bearer jwt_gerado_pela_api
+Authorization: Bearer jwt-gerado-pela-api
 ```
 
-## Padrao de erros
+Verificar usuario autenticado:
 
-Quando ocorre um erro de validacao, regra de negocio ou integridade do banco, a API retorna uma resposta JSON no formato:
-
-```json
-{
-  "erro": "Mensagem do erro"
-}
+```http
+GET /auth/me
 ```
 
-## Endpoints
+## Regras de Acesso
 
-### Autenticacao
+As regras principais configuradas em `SecurityConfig` sao:
 
-| Metodo | Rota | Descricao |
-| --- | --- | --- |
-| POST | `/auth/login` | Realiza login e retorna JWT |
-| GET | `/auth/me` | Retorna o usuario autenticado |
+| Recurso | Regra |
+| --- | --- |
+| `GET /usuarios/**` | Publico |
+| `POST/PUT/PATCH/DELETE /usuarios/**` | `ADMIN` |
+| `GET /chamados/**` | Publico |
+| `POST/PUT/PATCH/DELETE /chamados/**` | `TECNICO` ou `ADMIN` |
+| `/comentarios/**` | Publico |
+| `GET /categorias/**` | Publico |
+| `POST/PUT/DELETE /categorias/**` | `TECNICO` ou `ADMIN` |
+| `/auth/login` | Publico |
+| `/auth/me` | Autenticado |
+
+## Endpoints Principais
 
 ### Usuarios
 
-| Metodo | Rota | Descricao |
+| Metodo | Endpoint | Descricao |
 | --- | --- | --- |
-| POST | `/usuarios` | Cria um usuario |
-| GET | `/usuarios` | Lista todos os usuarios |
-| GET | `/usuarios/{id}` | Busca usuario por ID |
-| GET | `/usuarios/nome/{nome}` | Busca usuarios por nome |
-| GET | `/usuarios/email/{email}` | Busca usuario por email |
-| GET | `/usuarios/roles/{roles}` | Busca usuarios por perfil |
-| PATCH | `/usuarios/nome/{id}` | Atualiza apenas o nome |
-| PATCH | `/usuarios/email/{id}` | Atualiza apenas o email |
-| PATCH | `/usuarios/senha/{id}` | Atualiza apenas a senha |
-| PATCH | `/usuarios/roles/{id}` | Atualiza perfil via JSON |
-| PATCH | `/usuarios/{id}/roles/{roles}` | Atualiza perfil pela URL |
-| PUT | `/usuarios/{id}` | Atualiza todos os dados |
-| DELETE | `/usuarios/{id}` | Remove usuario |
+| `POST` | `/usuarios` | Cria usuario |
+| `GET` | `/usuarios` | Lista usuarios |
+| `GET` | `/usuarios/{id}` | Busca por ID |
+| `GET` | `/usuarios/email/{email}` | Busca por email |
+| `GET` | `/usuarios/nome/{nome}` | Busca por nome |
+| `GET` | `/usuarios/role/{role}` | Busca por perfil |
+| `PUT` | `/usuarios/{id}` | Atualiza usuario |
+| `DELETE` | `/usuarios/{id}` | Remove usuario |
 
-Exemplo de criacao:
+Payload de criacao/edicao:
 
 ```json
 {
   "nome": "Luan",
   "email": "luan@email.com",
   "senha": "12345",
-  "roles": "administrador"
+  "role": "ADMIN"
 }
 ```
 
-### Mesas
+Roles:
 
-| Metodo | Rota | Descricao |
+```text
+CLIENTE, TECNICO, ADMIN
+```
+
+### Categorias
+
+| Metodo | Endpoint | Descricao |
 | --- | --- | --- |
-| POST | `/mesas` | Cria uma mesa |
-| GET | `/mesas` | Lista todas as mesas |
-| GET | `/mesas/{id}` | Busca mesa por ID |
-| GET | `/mesas/capacidade/{capacidade}` | Busca mesas por capacidade |
-| GET | `/mesas/status/{status}` | Busca mesas por status |
-| PATCH | `/mesas/numero/{id}` | Atualiza apenas o numero |
-| PATCH | `/mesas/capacidade/{id}` | Atualiza apenas a capacidade |
-| PATCH | `/mesas/status/{id}` | Atualiza status via JSON |
-| PATCH | `/mesas/{id}/status/{status}` | Atualiza status pela URL |
-| PUT | `/mesas/{id}` | Atualiza todos os dados |
-| DELETE | `/mesas/{id}` | Remove mesa |
+| `POST` | `/categorias` | Cria categoria |
+| `GET` | `/categorias` | Lista categorias |
+| `GET` | `/categorias/{id}` | Busca por ID |
+| `GET` | `/categorias/nome/{nome}` | Busca por nome |
+| `PUT` | `/categorias/{id}` | Atualiza categoria |
+| `DELETE` | `/categorias/{id}` | Remove categoria |
 
-Exemplo de criacao:
+Payload:
 
 ```json
 {
-  "numero": 1,
-  "capacidade": 4,
-  "status": "disponivel"
+  "nome": "Hardware",
+  "descricao": "Problemas com equipamentos"
 }
 ```
 
-### Reservas
+### Chamados
 
-| Metodo | Rota | Descricao |
+| Metodo | Endpoint | Descricao |
 | --- | --- | --- |
-| POST | `/reservas` | Cria uma reserva com status `ativo` |
-| GET | `/reservas` | Lista todas as reservas |
-| GET | `/reservas/{id}` | Busca reserva por ID |
-| GET | `/reservas/data/{dataReserva}` | Busca reservas por data |
-| GET | `/reservas/mesa/{mesaId}` | Busca reservas por mesa |
-| GET | `/reservas/usuario/{usuarioId}` | Busca reservas por usuario |
-| GET | `/reservas/status/{status}` | Busca reservas por status |
-| PATCH | `/reservas/datareserva/{id}` | Atualiza data da reserva |
-| PATCH | `/reservas/status/{id}` | Atualiza status via JSON |
-| PATCH | `/reservas/{id}/status/{status}` | Atualiza status pela URL |
-| PATCH | `/reservas/{id}/cancelar` | Cancela uma reserva e libera a mesa |
-| PATCH | `/reservas/{id}/reservar` | Reativa uma reserva e marca a mesa como reservada |
-| PUT | `/reservas/{id}` | Atualiza usuario, mesa e data da reserva |
-| DELETE | `/reservas/{id}` | Remove reserva e libera a mesa |
+| `POST` | `/chamados` | Cria chamado |
+| `GET` | `/chamados` | Lista chamados |
+| `GET` | `/chamados/{id}` | Busca por ID |
+| `GET` | `/chamados/titulo/{titulo}` | Busca por titulo |
+| `GET` | `/chamados/tecnico/{tecnicoId}` | Busca por tecnico |
+| `GET` | `/chamados/cliente/{clienteId}` | Busca por cliente |
+| `GET` | `/chamados/categoria/{categoriaId}` | Busca por categoria |
+| `GET` | `/chamados/prioridade/{prioridade}` | Busca por prioridade |
+| `GET` | `/chamados/status/{status}` | Busca por status |
+| `GET` | `/chamados/dataabertura/{dataAbertura}` | Busca por data de abertura |
+| `GET` | `/chamados/datafechamento/{dataFechamento}` | Busca por data de fechamento |
+| `PATCH` | `/chamados/{id}/fechar` | Fecha chamado |
+| `PATCH` | `/chamados/{id}/abrir` | Reabre chamado |
+| `PUT` | `/chamados/{id}` | Atualiza chamado |
+| `DELETE` | `/chamados/{id}` | Remove chamado |
 
-Exemplo de criacao:
-
-```json
-{
-  "usuarioId": 1,
-  "mesaId": 1,
-  "dataReserva": "2026-05-27T20:30:00"
-}
-```
-
-Ao criar uma reserva, a API define automaticamente:
+Payload:
 
 ```json
 {
-  "status": "ativo"
+  "titulo": "Notebook nao liga",
+  "descricao": "Cliente informou que o notebook nao liga.",
+  "prioridade": "ALTA",
+  "clienteId": 1,
+  "tecnicoId": 2,
+  "categoriaId": 3
 }
 ```
 
-A mesa precisa estar com status `disponivel`. Se a mesa estiver `reservada` ou `inativa`, a API retorna erro.
-
-## Frontend
-
-O frontend esta em:
+Prioridades:
 
 ```text
-src/main/resources/static/index.html
+BAIXA, MEDIA, ALTA, URGENTE
 ```
 
-Ele e servido automaticamente pelo Spring Boot em:
+Status:
 
 ```text
-http://localhost:8080/
+ABERTO, EM_ANDAMENTO, RESOLVIDO, FECHADO, CANCELADO
 ```
 
-Tambem pode ser aberto diretamente no navegador. Nesse caso, o HTML tenta chamar a API em `http://localhost:8080`. A forma recomendada continua sendo acessar pelo proprio backend para evitar problemas de origem:
+### Comentarios
+
+| Metodo | Endpoint | Descricao |
+| --- | --- | --- |
+| `POST` | `/comentarios` | Cria comentario |
+| `GET` | `/comentarios` | Lista comentarios |
+| `GET` | `/comentarios/chamado/{chamadoId}` | Busca por chamado |
+| `GET` | `/comentarios/usuario/{usuarioId}` | Busca por usuario |
+| `GET` | `/comentarios/datacomentario/{dataComentario}` | Busca por data |
+| `PUT` | `/comentarios/{id}` | Atualiza comentario |
+| `DELETE` | `/comentarios/{id}` | Remove comentario |
+
+Payload de criacao/edicao:
+
+```json
+{
+  "mensagem": "Atendimento iniciado.",
+  "chamadosId": 1,
+  "usuarioId": 2
+}
+```
+
+Observacao: no request o campo esperado e `chamadosId`. Na resposta JSON, o getter atual expoe o ID do chamado como `chamadoId`.
+
+## Estrutura do Projeto
 
 ```text
-http://localhost:8080/
+src/main/java/com/luan/helpdesk
+  config/        Configuracoes de seguranca
+  controller/    Controllers REST
+  dto/           Objetos de entrada e saida da API
+  entity/        Entidades JPA
+  enums/         Roles, prioridades e status
+  repository/    Repositorios Spring Data
+  security/      JWT e filtro de autenticacao
+  service/       Regras de negocio
+
+src/main/resources
+  application.properties
+  static/index.html
 ```
 
-A API tambem possui CORS configurado para aceitar chamadas locais, inclusive as requisicoes `OPTIONS` usadas pelo navegador antes de rotas protegidas.
+## Testes e Build
 
-## Testes
+Rodar testes:
 
-Para executar os testes:
-
-```bash
-./mvnw test
+```powershell
+.\mvnw.cmd test
 ```
 
-No Windows:
+Gerar build:
 
-```bash
-mvnw.cmd test
+```powershell
+.\mvnw.cmd clean package
 ```
 
-## Observacoes
+No Linux/macOS, use `./mvnw` no lugar de `.\mvnw.cmd`.
 
-- As rotas `GET` principais sao publicas.
-- Rotas de alteracao, como `PUT`, `PATCH` e `DELETE`, exigem usuario autenticado com perfil `administrador`.
-- O endpoint `POST /usuarios` esta liberado para permitir criar usuarios iniciais.
-- A API possui CORS configurado para facilitar o uso do frontend local.
-- Erros de validacao, regra de negocio e integridade retornam JSON com o campo `erro`.
-- Ao criar uma reserva, a reserva nasce como `ativo` e a mesa associada passa para `reservada`.
-- Nao e permitido criar reserva em mesa `reservada` ou `inativa`.
-- Ao cancelar uma reserva por `/reservas/{id}/cancelar`, a mesa associada passa para `disponivel`.
-- Ao deletar uma reserva, a mesa associada tambem passa para `disponivel`.
-- Ao reativar uma reserva por `/reservas/{id}/reservar`, a mesa precisa estar `disponivel`.
+## Observacao Sobre Dependencia Local
+
+O `pom.xml` atual possui a dependencia:
+
+```xml
+<dependency>
+  <groupId>com.restaurante</groupId>
+  <artifactId>restaurante</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+</dependency>
+```
+
+Se o Maven falhar dizendo que nao encontrou `com.restaurante:restaurante:0.0.1-SNAPSHOT`, instale essa dependencia no repositorio Maven local ou remova-a do `pom.xml` caso ela nao seja mais usada pelo projeto.
+
+## Problemas Comuns
+
+### Erro ao conectar no banco
+
+Confira se o PostgreSQL esta rodando e se o banco `helpdesk` existe.
+
+### Erro 401 ou 403
+
+Faca login pelo frontend e use um usuario com o perfil exigido pelo endpoint. Chamados e categorias exigem `TECNICO` ou `ADMIN` para mutacoes. Usuarios exigem `ADMIN` para criacao, edicao e exclusao.
+
+### Frontend nao carrega dados
+
+Confira o campo `Base da API` na lateral da tela. Ele deve apontar para a URL onde o Spring Boot esta rodando, normalmente:
+
+```text
+http://localhost:8080
+```
